@@ -1,5 +1,5 @@
 {
-    "name": "zozlak/yaml",
+    "name": "zozlak/yaml-merge",
     "type": "library",
     "description": "A simple tool for merging & batch-editing yaml files",
     "keywords": [],
