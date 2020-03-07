@@ -1,0 +1,26 @@
+{
+    "name": "zozlak/yaml",
+    "type": "library",
+    "description": "A simple tool for merging & batch-editing yaml files",
+    "keywords": [],
+    "homepage": "https://github.com/zozlak/yaml",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mateusz Żółtak",
+            "email": "zozlak@zozlak.org",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "zozlak\\": "src/zozlak"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.4"
+    }
+}

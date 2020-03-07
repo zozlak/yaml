@@ -1,0 +1,24 @@
+---
+oai:
+  dbConnStr: 'pgsql: '
+  cacheDir: ""
+  repositoryName: myRepositoryName
+  baseUrl: https://my.oai.endpoint/root
+  earliestDatestamp: "1900-01-01T00:00:00Z"
+  adminEmail: oai-admin@my.domain
+  idNmsp: http://hdl.handle.net/
+  idProp: https://vocabs.acdh.oeaw.ac.at/schema#hasIdentifier
+  repoBaseUrl: http://127.0.0.1/rest/
+  searchClass: \acdhOeaw\oai\search\BaseSearch
+  formats:
+    oai_dc:
+      metadataPrefix: oai_dc
+      schema: http://www.openarchives.org/OAI/2.0/oai_dc.xsd
+      metadataNamespace: http://www.openarchives.org/OAI/2.0/oai_dc/
+      class: \acdhOeaw\oai\metadata\DcMetadata
+    acdhdc:
+      metadataPrefix: acdhdc
+      schema: http://www.openarchives.org/OAI/2.0/oai_dc.xsd
+      eqProp: http://www.w3.org/2002/07/owl#equivalentProperty
+      mode: both
+...
