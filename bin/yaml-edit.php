@@ -26,7 +26,7 @@
 
 use zozlak\yaml\Yaml;
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../src/zozlak/yaml/Yaml.php';
 
 $usage = <<<AAA
 yaml-edit.php [--src src [--srcPath path] [--targetPath path]]* targetFile
@@ -88,7 +88,7 @@ if (empty($error)){
     }
 }
 if (!empty($error)) {
-    echo "ERROR - $error\n\nUsage:\n$usage";
+    exit("ERROR - $error\n\nUsage:\n$usage");
 }
 
 if (file_exists($targetFile)) {
