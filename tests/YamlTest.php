@@ -103,6 +103,11 @@ class: \acdhOeaw\oai\metadata\DcMetadata');
         $this->assertEquals((object) $data, $yaml->get('$.oai.formats.oai_dc'));
     }
 
+    public function testGetEscaped(): void {
+        $yaml = new Yaml(self::TESTFILE);
+        $this->assertEquals('https://www.geonames.org/\2', $yaml->get('$.oai.|^https?://([^\.]*[\.])?geonames[\.]org/([0-9]+)(/\.*)?$|'));
+    }
+    
     public function testSet(): void {
         $dataA = ['a' => 12, 'v' => 'abd'];
         $dataO = (object) $dataA;
@@ -136,6 +141,12 @@ class: \acdhOeaw\oai\metadata\DcMetadata');
         $this->assertEquals($dataO, $yaml->get('$.oai.formats.acdhdc.metadataPrefix.completely.new.path'));
     }
 
+    public function testSetEscaped(): void {
+        $yaml = new Yaml(self::TESTFILE);
+        $yaml->set('$.oai.|^https?://([^\.]*[\.])?geonames[\.]org/([0-9]+)(/\.*)?$|', 'foo');
+        $this->assertEquals('foo', $yaml->get('$.oai.|^https?://([^\.]*[\.])?geonames[\.]org/([0-9]+)(/\.*)?$|'));
+    }
+    
     public function testSetInvariance(): void {
         $data    = (object) ['a' => 12, 'v' => 'abd'];
         $yaml    = new Yaml(self::TESTFILE);
@@ -186,6 +197,17 @@ c:
         $this->assertEquals($output, $a->get('$.', true));
     }
 
+    public function testMergeEscaped(): void {
+        $a      = new Yaml('a: 1');
+        $b      = new Yaml("'|^https?://([^.]*[.])?geonames[.]org/([0-9]+)(/.*)?$|': foo");
+        $a->merge($b);
+        $output = [
+            'a' => 1,
+            '|^https?://([^.]*[.])?geonames[.]org/([0-9]+)(/.*)?$|' => 'foo'
+        ];
+        $this->assertEquals($output, $a->get('$.', true));        
+    }
+    
     public function testWritFile(): void {
         $yaml = new Yaml(self::TESTFILE);
         $yaml->writeFile(__DIR__ . '/out.yaml');

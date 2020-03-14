@@ -21,4 +21,5 @@ oai:
       schema: http://www.openarchives.org/OAI/2.0/oai_dc.xsd
       eqProp: http://www.w3.org/2002/07/owl#equivalentProperty
       mode: both
+  '|^https?://([^.]*[.])?geonames[.]org/([0-9]+)(/.*)?$|': https://www.geonames.org/\2
 ...

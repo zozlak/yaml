@@ -112,7 +112,7 @@ class Yaml {
      */
     public function get(string $path = '$.', bool $assoc = false) {
         $path = $this->sanitizePath($path);
-        $path = $path === '' ? [] : explode('.', $path);
+        $path = $path === '' ? [] : $this->splitPath($path);
 
         $obj = $this->data;
         $i   = 0;
@@ -137,7 +137,7 @@ class Yaml {
      */
     public function set(string $path, $value): void {
         $path = $this->sanitizePath($path);
-        $path = explode('.', $path);
+        $path = $this->splitPath($path);
 
         $obj = $this->data;
         $i   = 0;
@@ -156,7 +156,7 @@ class Yaml {
         if (!is_object($value)) {
             if (is_array($value)) {
                 $value = (object) $value;
-            } else {
+            } elseif (!empty($value)) {
                 $value = json_decode(json_encode(yaml_parse($value)));
             }
         } else {
@@ -196,6 +196,7 @@ class Yaml {
      */
     private function processLeafs(object $obj, string $path): void {
         foreach ($obj as $p => $v) {
+            $p = str_replace('.', '\.', $p);
             if (is_object($v)) {
                 $this->processLeafs($v, "$path.$p");
             } else {
@@ -216,6 +217,15 @@ class Yaml {
             throw new BadMethodCallException('Only paths beginning at the root node ($.) are supported');
         }
         return substr($path, 2);
+    }
+
+    private function splitPath(string $path): array {
+        $path = explode('.', str_replace('\.', chr(1), $path));
+        foreach ($path as &$i) {
+            $i = str_replace(chr(1), '.', $i);
+        }
+        unset($i);
+        return $path;
     }
 
 }
