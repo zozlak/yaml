@@ -219,6 +219,12 @@ class Yaml {
         return substr($path, 2);
     }
 
+    /**
+     * Splits a path string into array taking care of dots escaping.
+     * 
+     * @param string $path path to be splitted.
+     * @return array
+     */
     private function splitPath(string $path): array {
         $path = explode('.', str_replace('\.', chr(1), $path));
         foreach ($path as &$i) {
