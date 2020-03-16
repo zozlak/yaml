@@ -194,13 +194,16 @@ class Yaml {
      * @param string $path path to merge at
      * @return void
      */
-    private function processLeafs(object $obj, string $path): void {
+    private function processLeafs($obj, string $path): void {
+        if (!is_array($obj) && !is_object($obj)) {
+            throw new BadMethodCallException('The object parameter must be an array or an object');
+        }
         foreach ($obj as $p => $v) {
             $p = str_replace('.', '\.', $p);
             if (is_object($v)) {
                 $this->processLeafs($v, "$path.$p");
             } else {
-                $this->set("$path.$p", yaml_emit($v));
+                $this->set("$path.$p", yaml_emit(json_decode(json_encode($v), true)));
             }
         }
     }

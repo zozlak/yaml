@@ -45,10 +45,10 @@ class YamlTest extends \PHPUnit\Framework\TestCase {
     public function testFromString(): void {
         $yaml = new Yaml(file_get_contents(self::TESTFILE));
         $this->assertEquals(file_get_contents(self::TESTFILE), (string) $yaml);
-        
+
         $yaml = new Yaml('');
         $this->assertEquals("--- []\n...\n", (string) $yaml);
-        
+
         $yaml = new Yaml('{"x": 123}');
         $this->assertEquals("---\nx: 123\n...\n", (string) $yaml);
     }
@@ -107,7 +107,7 @@ class: \acdhOeaw\oai\metadata\DcMetadata');
         $yaml = new Yaml(self::TESTFILE);
         $this->assertEquals('https://www.geonames.org/\2', $yaml->get('$.oai.|^https?://([^\.]*[\.])?geonames[\.]org/([0-9]+)(/\.*)?$|'));
     }
-    
+
     public function testSet(): void {
         $dataA = ['a' => 12, 'v' => 'abd'];
         $dataO = (object) $dataA;
@@ -146,7 +146,7 @@ class: \acdhOeaw\oai\metadata\DcMetadata');
         $yaml->set('$.oai.|^https?://([^\.]*[\.])?geonames[\.]org/([0-9]+)(/\.*)?$|', 'foo');
         $this->assertEquals('foo', $yaml->get('$.oai.|^https?://([^\.]*[\.])?geonames[\.]org/([0-9]+)(/\.*)?$|'));
     }
-    
+
     public function testSetInvariance(): void {
         $data    = (object) ['a' => 12, 'v' => 'abd'];
         $yaml    = new Yaml(self::TESTFILE);
@@ -202,23 +202,35 @@ c:
         $b      = new Yaml("'|^https?://([^.]*[.])?geonames[.]org/([0-9]+)(/.*)?$|': foo");
         $a->merge($b);
         $output = [
-            'a' => 1,
+            'a'                                                     => 1,
             '|^https?://([^.]*[.])?geonames[.]org/([0-9]+)(/.*)?$|' => 'foo',
         ];
-        $this->assertEquals($output, $a->get('$.', true));        
+        $this->assertEquals($output, $a->get('$.', true));
     }
-    
+
     public function testMergeColon(): void {
         $a      = new Yaml('a: 1');
-        $b = new Yaml("b: 'aaa: bbb'");
+        $b      = new Yaml("b: 'aaa: bbb'");
         $a->merge($b);
         $output = [
             'a' => 1,
             'b' => 'aaa: bbb',
         ];
-        $this->assertEquals($output, $a->get('$.', true)); 
+        $this->assertEquals($output, $a->get('$.', true));
     }
-    
+
+    public function testMergeArray(): void {
+        $a      = new Yaml('a: 1');
+        $b      = new Yaml('
+a:
+- x
+- z: 2
+');
+        $a->merge($b);
+        $output = ['a' => ['x', ['z' => 2]]];
+        $this->assertEquals($output, $a->get('$.', true));
+    }
+
     public function testWritFile(): void {
         $yaml = new Yaml(self::TESTFILE);
         $yaml->writeFile(__DIR__ . '/out.yaml');
