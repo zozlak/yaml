@@ -203,9 +203,20 @@ c:
         $a->merge($b);
         $output = [
             'a' => 1,
-            '|^https?://([^.]*[.])?geonames[.]org/([0-9]+)(/.*)?$|' => 'foo'
+            '|^https?://([^.]*[.])?geonames[.]org/([0-9]+)(/.*)?$|' => 'foo',
         ];
         $this->assertEquals($output, $a->get('$.', true));        
+    }
+    
+    public function testMergeColon(): void {
+        $a      = new Yaml('a: 1');
+        $b = new Yaml("b: 'aaa: bbb'");
+        $a->merge($b);
+        $output = [
+            'a' => 1,
+            'b' => 'aaa: bbb',
+        ];
+        $this->assertEquals($output, $a->get('$.', true)); 
     }
     
     public function testWritFile(): void {

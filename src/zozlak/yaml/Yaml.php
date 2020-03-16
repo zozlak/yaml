@@ -200,7 +200,7 @@ class Yaml {
             if (is_object($v)) {
                 $this->processLeafs($v, "$path.$p");
             } else {
-                $this->set("$path.$p", $v);
+                $this->set("$path.$p", yaml_emit($v));
             }
         }
     }
