@@ -231,10 +231,23 @@ a:
         $this->assertEquals($output, $a->get('$.', true));
     }
 
-    public function testWritFile(): void {
+    public function testWriteFile(): void {
         $yaml = new Yaml(self::TESTFILE);
         $yaml->writeFile(__DIR__ . '/out.yaml');
         $this->assertEquals(file_get_contents(self::TESTFILE), file_get_contents(__DIR__ . '/out.yaml'));
     }
 
+    public function testMergeScalar(): void {
+        $src = new Yaml('a: "b: 1"');
+        $target = new Yaml('');
+        $target->merge(new Yaml($src->get('$.a'), true), '$.c');
+        $output = ['c' => 'b: 1'];
+        $this->assertEquals($output, $target->get('$.', true));
+
+        $src = new Yaml('a: "b: 1"');
+        $target = new Yaml('');
+        $target->merge(new Yaml($src->get('$.'), true), '$.c');
+        $output = ['c' => ['a' => 'b: 1']];
+        $this->assertEquals($output, $target->get('$.', true));
+    }
 }

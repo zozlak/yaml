@@ -99,6 +99,6 @@ if (file_exists($targetFile)) {
 foreach ($inputs as $i) {
     $i = (object) $i;
     $yaml = new Yaml($i->src);
-    $target->merge($yaml->get($i->srcPath ?? '$.'), $i->targetPath ?? '$.');
+    $target->merge(new Yaml($yaml->get($i->srcPath ?? '$.'), true), $i->targetPath ?? '$.');
 }
 $target->writeFile($targetFile);

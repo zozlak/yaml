@@ -57,8 +57,10 @@ class Yaml {
      *   - array
      *   - JSON string
      *   - YAML string
+     * @param $doNotParseString should $input be treated as a single
+     *   scalar value if it's a string?
      */
-    public function __construct($input) {
+    public function __construct($input, $doNotParseString = false) {
         if (is_object($input)) {
             if ($input instanceof self) {
                 $this->data = json_decode(json_encode($input->data));
@@ -73,6 +75,8 @@ class Yaml {
             $this->data = (object) json_decode(json_encode(yaml_parse_file($input)));
         } elseif (empty($input)) {
             $this->data = (object) [];
+        } elseif ($doNotParseString && is_string($input)) {
+            $this->data = $input;
         } else {
             $this->data = json_decode($input);
             if ($this->data === null) {
@@ -196,7 +200,8 @@ class Yaml {
      */
     private function processLeafs($obj, string $path): void {
         if (!is_array($obj) && !is_object($obj)) {
-            throw new BadMethodCallException('The object parameter must be an array or an object');
+            $this->set($path, yaml_emit($obj, true));
+            return;
         }
         foreach ($obj as $p => $v) {
             $p = str_replace('.', '\.', $p);
